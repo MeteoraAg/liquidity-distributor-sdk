@@ -45,6 +45,14 @@ export class LiquidityDistributorClient {
     this.commitment = commitment;
   }
 
+  /**
+   * Create a position in the DAMM v2 pool using the CP AMM SDK
+   * @param owner - The owner's public key
+   * @param payer - The payer's public key
+   * @param pool - The pool's public key
+   * @param positionNft - The position NFT's public key
+   * @returns The create position transaction instructions
+   */
   private async createPosition(
     owner: PublicKey,
     payer: PublicKey,
@@ -63,6 +71,11 @@ export class LiquidityDistributorClient {
     return createPositionTx.instructions;
   }
 
+  /**
+   * Get the user's information from the claim proof endpoint
+   * @param claimant - The claimant's public key
+   * @returns The user's information from kv proof endpoint
+   */
   async getUser(claimant: PublicKey): Promise<UserResponse | null> {
     try {
       const res = await fetch(
@@ -82,6 +95,11 @@ export class LiquidityDistributorClient {
     }
   }
 
+  /**
+   * Get the claim status from the claim proof endpoint
+   * @param claimant - The claimant's public key
+   * @returns The claim status account data from the claim proof endpoint
+   */
   async getClaimStatus(claimant: PublicKey): Promise<ClaimStatus | null> {
     const user = await this.getUser(claimant);
     if (!user) {
@@ -102,6 +120,11 @@ export class LiquidityDistributorClient {
     return claimStatusAccountData;
   }
 
+  /**
+   * Get the merkle tree distributor address from the merkle tree
+   * @param merkleTree - The merkle tree's public key
+   * @returns The merkle tree distributor address
+   */
   async getDistributor(merkleTree: PublicKey): Promise<Distributor | null> {
     const distributor =
       await this.program.account.merkleDistributor.fetchNullable(merkleTree);
@@ -111,6 +134,12 @@ export class LiquidityDistributorClient {
     return distributor;
   }
 
+  /**
+   * Claim a position NFT from the merkle tree
+   * @param claimant - The claimant's public key
+   * @param payer - The payer's public key
+   * @returns The new claim transaction and the second position NFT mint keypair to sign the transaction
+   */
   async claimPositionNft(
     claimant: PublicKey,
     payer: PublicKey
