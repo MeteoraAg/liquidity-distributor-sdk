@@ -4,6 +4,7 @@ import {
   Keypair,
   PublicKey,
   Transaction,
+  TransactionInstruction,
 } from "@solana/web3.js";
 import {
   ClaimStatus,
@@ -11,14 +12,18 @@ import {
   LiquidityDistributorProgram,
   UserResponse,
 } from "./types";
-import { createLiquidityDistributorProgram } from "./helpers/program";
 import {
+  createLiquidityDistributorProgram,
   deriveClaimStatusAddress,
   deriveDammv2EventAuthorityAddress,
-} from "./helpers/pda";
+} from "./helpers";
 import BN from "bn.js";
 import { DAMM_V2_PROGRAM_ID } from "./constants";
-import { derivePositionNftAccount } from "@meteora-ag/cp-amm-sdk";
+import {
+  derivePositionAddress,
+  derivePositionNftAccount,
+} from "@meteora-ag/cp-amm-sdk";
+import { CpAmm } from "@meteora-ag/cp-amm-sdk";
 
 export class LiquidityDistributorClient {
   program: LiquidityDistributorProgram;
@@ -39,6 +44,25 @@ export class LiquidityDistributorClient {
     this.connection = connection;
     this.commitment = commitment;
   }
+
+  private async createPosition(
+    owner: PublicKey,
+    payer: PublicKey,
+    pool: PublicKey,
+    positionNft: PublicKey
+  ): Promise<TransactionInstruction[]> {
+    const cpAmm = new CpAmm(this.connection);
+
+    const createPositionTx = await cpAmm.createPosition({
+      owner,
+      payer,
+      pool,
+      positionNft,
+    });
+
+    return createPositionTx.instructions;
+  }
+
   async getUser(claimant: PublicKey): Promise<UserResponse | null> {
     try {
       const res = await fetch(
@@ -90,7 +114,10 @@ export class LiquidityDistributorClient {
   async claimPositionNft(
     claimant: PublicKey,
     payer: PublicKey
-  ): Promise<Transaction> {
+  ): Promise<{
+    newClaimTx: Transaction;
+    secondPositionNftMintKeypair: Keypair;
+  }> {
     const user = await this.getUser(claimant);
     if (!user) {
       throw new Error("User not found");
@@ -108,12 +135,27 @@ export class LiquidityDistributorClient {
       distributorAddress
     );
 
-    const secondPosition = Keypair.generate();
+    const secondPositionKeypair = Keypair.generate();
     const secondPositionNftAccount = derivePositionNftAccount(
-      secondPosition.publicKey
+      secondPositionKeypair.publicKey
+    );
+    const secondPosition = derivePositionAddress(
+      secondPositionKeypair.publicKey
+    );
+    const dammV2EventAuthority = deriveDammv2EventAuthorityAddress();
+
+    const preInstructions: TransactionInstruction[] = [];
+
+    const createPositionIxs = await this.createPosition(
+      claimant,
+      claimant,
+      distributorAccountData.pool,
+      secondPositionKeypair.publicKey
     );
 
-    return this.program.methods
+    preInstructions.push(...createPositionIxs);
+
+    const newClaimTx = await this.program.methods
       .newClaim(new BN(user.amount), proof)
       .accountsPartial({
         distributor: distributorAddress,
@@ -124,10 +166,16 @@ export class LiquidityDistributorClient {
         pool: distributorAccountData.pool,
         position: distributorAccountData.position,
         positionNftAccount: distributorAccountData.positionNftAccount,
-        secondPosition: secondPosition.publicKey,
+        secondPosition: secondPosition,
         secondPositionNftAccount: secondPositionNftAccount,
-        dammEventAuthority: deriveDammv2EventAuthorityAddress(),
+        dammEventAuthority: dammV2EventAuthority,
       })
+      .preInstructions(preInstructions)
       .transaction();
+
+    return {
+      newClaimTx,
+      secondPositionNftMintKeypair: secondPositionKeypair,
+    };
   }
 }

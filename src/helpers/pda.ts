@@ -1,5 +1,8 @@
 import { PublicKey } from "@solana/web3.js";
-import { DAMM_V2_PROGRAM_ID, LIQUIDITY_DISTRIBUTOR_PROGRAM_ID } from "../constants";
+import {
+  DAMM_V2_PROGRAM_ID,
+  LIQUIDITY_DISTRIBUTOR_PROGRAM_ID,
+} from "../constants";
 
 export function deriveClaimStatusAddress(
   claimant: PublicKey,

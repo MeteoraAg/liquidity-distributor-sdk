@@ -4,7 +4,6 @@ import { LiquidityDistributor } from "./idl/idl";
 export type LiquidityDistributorProgram = Program<LiquidityDistributor>;
 
 export type ClaimStatus = IdlTypes<LiquidityDistributor>["claimStatus"];
-
 export type Distributor = IdlTypes<LiquidityDistributor>["merkleDistributor"];
 
 export interface UserResponse {
