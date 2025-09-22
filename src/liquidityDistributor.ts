@@ -115,10 +115,6 @@ export class LiquidityDistributorClient {
     const claimStatusAccountData =
       await this.program.account.claimStatus.fetchNullable(claimStatusAddress);
 
-    if (!claimStatusAccountData) {
-      return null;
-    }
-
     return claimStatusAccountData;
   }
 
@@ -130,10 +126,6 @@ export class LiquidityDistributorClient {
   async getDistributor(merkleTree: PublicKey): Promise<Distributor | null> {
     const distributor =
       await this.program.account.merkleDistributor.fetchNullable(merkleTree);
-
-    if (!distributor) {
-      return null;
-    }
 
     return distributor;
   }
