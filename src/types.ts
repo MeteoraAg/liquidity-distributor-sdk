@@ -1,5 +1,6 @@
 import { IdlTypes, Program } from "@coral-xyz/anchor";
 import { LiquidityDistributor } from "./idl/idl";
+import { PublicKey } from "@solana/web3.js";
 
 export type LiquidityDistributorProgram = Program<LiquidityDistributor>;
 
@@ -11,3 +12,9 @@ export interface UserResponse {
   amount: number;
   proof: number[][];
 }
+
+export type ClaimPositionNftParam = {
+  claimant: PublicKey;
+  payer: PublicKey;
+  distributorAccountData?: Distributor;
+};

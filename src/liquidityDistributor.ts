@@ -7,6 +7,7 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import {
+  ClaimPositionNftParam,
   ClaimStatus,
   Distributor,
   LiquidityDistributorProgram,
@@ -113,8 +114,9 @@ export class LiquidityDistributorClient {
 
     const claimStatusAccountData =
       await this.program.account.claimStatus.fetchNullable(claimStatusAddress);
+
     if (!claimStatusAccountData) {
-      throw new Error("Claim status not found");
+      return null;
     }
 
     return claimStatusAccountData;
@@ -128,9 +130,11 @@ export class LiquidityDistributorClient {
   async getDistributor(merkleTree: PublicKey): Promise<Distributor | null> {
     const distributor =
       await this.program.account.merkleDistributor.fetchNullable(merkleTree);
+
     if (!distributor) {
-      throw new Error("Distributor not found");
+      return null;
     }
+
     return distributor;
   }
 
@@ -140,13 +144,12 @@ export class LiquidityDistributorClient {
    * @param payer - The payer's public key
    * @returns The new claim transaction and the second position NFT mint keypair to sign the transaction
    */
-  async claimPositionNft(
-    claimant: PublicKey,
-    payer: PublicKey
-  ): Promise<{
+  async claimPositionNft(params: ClaimPositionNftParam): Promise<{
     newClaimTx: Transaction;
     secondPositionNftMintKeypair: Keypair;
   }> {
+    const { claimant, payer } = params;
+
     const user = await this.getUser(claimant);
     if (!user) {
       throw new Error("User not found");
@@ -155,9 +158,13 @@ export class LiquidityDistributorClient {
     const { proof, merkle_tree } = user;
     const distributorAddress = new PublicKey(merkle_tree);
 
-    const distributorAccountData = await this.getDistributor(
-      distributorAddress
-    );
+    let { distributorAccountData } = params;
+    if (!distributorAccountData) {
+      distributorAccountData = await this.getDistributor(distributorAddress);
+      if (!distributorAccountData) {
+        throw new Error("Distributor not found");
+      }
+    }
 
     const claimStatusAddress = deriveClaimStatusAddress(
       claimant,
