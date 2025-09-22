@@ -1,5 +1,5 @@
 import { IdlTypes, Program } from "@coral-xyz/anchor";
-import { MerkleDistributor as LiquidityDistributor } from "./idl/idl";
+import { LiquidityDistributor } from "./idl/idl";
 
 export type LiquidityDistributorProgram = Program<LiquidityDistributor>;
 

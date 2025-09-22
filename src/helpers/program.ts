@@ -1,6 +1,6 @@
 import { Commitment, Connection } from "@solana/web3.js";
 import { LiquidityDistributorProgram } from "../types";
-import { MerkleDistributor as LiquidityDistributor } from "../idl/idl";
+import { LiquidityDistributor } from "../idl/idl";
 import LiquidityDistributorIDL from "../idl/idl.json";
 import { AnchorProvider, Program, Wallet } from "@coral-xyz/anchor";
 

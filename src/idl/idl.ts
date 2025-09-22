@@ -2,12 +2,12 @@
  * Program IDL in camelCase format in order to be used in JS/TS.
  *
  * Note that this is only a type helper and is not the actual IDL. The original
- * IDL can be found at `target/idl/merkle_distributor.json`.
+ * IDL can be found at `target/idl/liquidity_distributor.json`.
  */
-export type MerkleDistributor = {
+export type LiquidityDistributor = {
   address: "pDisRpxvnFw4osSqDPqMJ62tLsVQGsHL4tMX23ArYrL";
   metadata: {
-    name: "merkleDistributor";
+    name: "liquidityDistributor";
     version: "0.1.0";
     spec: "0.1.0";
     description: "A Solana program for distributing tokens according to a Merkle root.";
