@@ -1,0 +1,1555 @@
+{
+    "address": "pDisRpxvnFw4osSqDPqMJ62tLsVQGsHL4tMX23ArYrL",
+    "metadata": {
+        "name": "merkle_distributor",
+        "version": "0.1.0",
+        "spec": "0.1.0",
+        "description": "A Solana program for distributing tokens according to a Merkle root."
+    },
+    "instructions": [
+        {
+            "name": "clawback",
+            "discriminator": [
+                111,
+                92,
+                142,
+                79,
+                33,
+                234,
+                82,
+                27
+            ],
+            "accounts": [
+                {
+                    "name": "distributor",
+                    "docs": [
+                        "The [MerkleDistributor]."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "position_nft_account",
+                    "relations": [
+                        "distributor"
+                    ]
+                },
+                {
+                    "name": "token_2022_program",
+                    "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "close_claim_status",
+            "docs": [
+                "only available in test phase"
+            ],
+            "discriminator": [
+                163,
+                214,
+                191,
+                165,
+                245,
+                188,
+                17,
+                185
+            ],
+            "accounts": [
+                {
+                    "name": "claim_status",
+                    "writable": true
+                },
+                {
+                    "name": "claimant",
+                    "writable": true,
+                    "relations": [
+                        "claim_status"
+                    ]
+                },
+                {
+                    "name": "admin",
+                    "signer": true,
+                    "relations": [
+                        "claim_status"
+                    ]
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "close_distributor",
+            "docs": [
+                "only available in test phase"
+            ],
+            "discriminator": [
+                202,
+                56,
+                180,
+                143,
+                46,
+                104,
+                106,
+                112
+            ],
+            "accounts": [
+                {
+                    "name": "distributor",
+                    "docs": [
+                        "[MerkleDistributor]."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "admin",
+                    "docs": [
+                        "Admin wallet, responsible for creating the distributor and paying for the transaction.",
+                        "Also has the authority to set the clawback receiver and change itself."
+                    ],
+                    "signer": true,
+                    "relations": [
+                        "distributor"
+                    ]
+                },
+                {
+                    "name": "rent_receiver",
+                    "writable": true
+                },
+                {
+                    "name": "position_nft_account",
+                    "relations": [
+                        "distributor"
+                    ]
+                },
+                {
+                    "name": "token_2022_program",
+                    "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "new_claim",
+            "discriminator": [
+                78,
+                177,
+                98,
+                123,
+                210,
+                21,
+                187,
+                83
+            ],
+            "accounts": [
+                {
+                    "name": "distributor",
+                    "docs": [
+                        "The [MerkleDistributor]."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "claim_status",
+                    "docs": [
+                        "Claim status PDA"
+                    ],
+                    "writable": true,
+                    "pda": {
+                        "seeds": [
+                            {
+                                "kind": "const",
+                                "value": [
+                                    67,
+                                    108,
+                                    97,
+                                    105,
+                                    109,
+                                    83,
+                                    116,
+                                    97,
+                                    116,
+                                    117,
+                                    115
+                                ]
+                            },
+                            {
+                                "kind": "account",
+                                "path": "claimant"
+                            },
+                            {
+                                "kind": "account",
+                                "path": "distributor"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "claimant",
+                    "docs": [
+                        "Who is claiming the tokens."
+                    ],
+                    "signer": true
+                },
+                {
+                    "name": "payer",
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": [
+                        "The [System] program."
+                    ],
+                    "address": "11111111111111111111111111111111"
+                },
+                {
+                    "name": "amm_program",
+                    "address": "cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG"
+                },
+                {
+                    "name": "pool",
+                    "relations": [
+                        "distributor"
+                    ]
+                },
+                {
+                    "name": "position",
+                    "writable": true,
+                    "relations": [
+                        "distributor"
+                    ]
+                },
+                {
+                    "name": "position_nft_account",
+                    "relations": [
+                        "distributor"
+                    ]
+                },
+                {
+                    "name": "second_position",
+                    "writable": true
+                },
+                {
+                    "name": "second_position_nft_account"
+                },
+                {
+                    "name": "damm_event_authority"
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": "u64"
+                },
+                {
+                    "name": "proof",
+                    "type": {
+                        "vec": {
+                            "array": [
+                                "u8",
+                                32
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "new_distributor",
+            "discriminator": [
+                32,
+                139,
+                112,
+                171,
+                0,
+                2,
+                225,
+                155
+            ],
+            "accounts": [
+                {
+                    "name": "distributor",
+                    "docs": [
+                        "[MerkleDistributor]."
+                    ],
+                    "writable": true,
+                    "pda": {
+                        "seeds": [
+                            {
+                                "kind": "const",
+                                "value": [
+                                    77,
+                                    101,
+                                    114,
+                                    107,
+                                    108,
+                                    101,
+                                    68,
+                                    105,
+                                    115,
+                                    116,
+                                    114,
+                                    105,
+                                    98,
+                                    117,
+                                    116,
+                                    111,
+                                    114
+                                ]
+                            },
+                            {
+                                "kind": "account",
+                                "path": "base"
+                            },
+                            {
+                                "kind": "arg",
+                                "path": "version"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "base",
+                    "docs": [
+                        "Base key of the distributor."
+                    ],
+                    "signer": true
+                },
+                {
+                    "name": "clawback_receiver"
+                },
+                {
+                    "name": "admin",
+                    "docs": [
+                        "Admin wallet, responsible for creating the distributor and paying for the transaction.",
+                        "Also has the authority to set the clawback receiver and change itself."
+                    ],
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "system_program",
+                    "docs": [
+                        "The [System] program."
+                    ],
+                    "address": "11111111111111111111111111111111"
+                },
+                {
+                    "name": "pool",
+                    "relations": [
+                        "position"
+                    ]
+                },
+                {
+                    "name": "position",
+                    "docs": [
+                        "The first position"
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "position_nft_account",
+                    "docs": [
+                        "The token account for position nft"
+                    ]
+                }
+            ],
+            "args": [
+                {
+                    "name": "version",
+                    "type": "u64"
+                },
+                {
+                    "name": "root",
+                    "type": {
+                        "array": [
+                            "u8",
+                            32
+                        ]
+                    }
+                },
+                {
+                    "name": "total_claim",
+                    "type": "u64"
+                },
+                {
+                    "name": "max_num_nodes",
+                    "type": "u64"
+                },
+                {
+                    "name": "clawback_start_ts",
+                    "type": "i64"
+                },
+                {
+                    "name": "activation_point",
+                    "type": "u64"
+                },
+                {
+                    "name": "activation_type",
+                    "type": "u8"
+                },
+                {
+                    "name": "closable",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "set_activation_point",
+            "discriminator": [
+                91,
+                249,
+                15,
+                165,
+                26,
+                129,
+                254,
+                125
+            ],
+            "accounts": [
+                {
+                    "name": "distributor",
+                    "docs": [
+                        "[MerkleDistributor]."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "admin",
+                    "docs": [
+                        "Payer to create the distributor."
+                    ],
+                    "writable": true,
+                    "signer": true,
+                    "relations": [
+                        "distributor"
+                    ]
+                }
+            ],
+            "args": [
+                {
+                    "name": "activation_point",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "set_admin",
+            "discriminator": [
+                251,
+                163,
+                0,
+                52,
+                91,
+                194,
+                187,
+                92
+            ],
+            "accounts": [
+                {
+                    "name": "distributor",
+                    "docs": [
+                        "The [MerkleDistributor]."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "admin",
+                    "docs": [
+                        "Admin signer"
+                    ],
+                    "writable": true,
+                    "signer": true
+                },
+                {
+                    "name": "new_admin",
+                    "docs": [
+                        "New admin account"
+                    ],
+                    "writable": true
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "set_clawback_receiver",
+            "discriminator": [
+                153,
+                217,
+                34,
+                20,
+                19,
+                29,
+                229,
+                75
+            ],
+            "accounts": [
+                {
+                    "name": "distributor",
+                    "docs": [
+                        "The [MerkleDistributor]."
+                    ],
+                    "writable": true
+                },
+                {
+                    "name": "new_clawback_account"
+                },
+                {
+                    "name": "admin",
+                    "docs": [
+                        "Admin signer"
+                    ],
+                    "writable": true,
+                    "signer": true
+                }
+            ],
+            "args": []
+        }
+    ],
+    "accounts": [
+        {
+            "name": "ClaimStatus",
+            "discriminator": [
+                22,
+                183,
+                249,
+                157,
+                247,
+                95,
+                150,
+                96
+            ]
+        },
+        {
+            "name": "MerkleDistributor",
+            "discriminator": [
+                77,
+                119,
+                139,
+                70,
+                84,
+                247,
+                12,
+                26
+            ]
+        },
+        {
+            "name": "Pool",
+            "discriminator": [
+                241,
+                154,
+                109,
+                4,
+                17,
+                177,
+                109,
+                188
+            ]
+        },
+        {
+            "name": "Position",
+            "discriminator": [
+                170,
+                188,
+                143,
+                228,
+                122,
+                64,
+                247,
+                208
+            ]
+        }
+    ],
+    "events": [
+        {
+            "name": "ClaimedEvent",
+            "discriminator": [
+                144,
+                172,
+                209,
+                86,
+                144,
+                87,
+                84,
+                115
+            ]
+        },
+        {
+            "name": "NewClaimEvent",
+            "discriminator": [
+                244,
+                3,
+                231,
+                151,
+                60,
+                101,
+                55,
+                55
+            ]
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "InvalidPositionLiquidity",
+            "msg": "Invalid position liquidity"
+        },
+        {
+            "code": 6001,
+            "name": "InvalidActivationParameters",
+            "msg": "Invalid activation parameters"
+        },
+        {
+            "code": 6002,
+            "name": "ArithmeticError",
+            "msg": "Arithmetic Error (overflow/underflow)"
+        },
+        {
+            "code": 6003,
+            "name": "InvalidPoolAmount",
+            "msg": "Invalid pool amount"
+        },
+        {
+            "code": 6004,
+            "name": "InvalidProof",
+            "msg": "Invalid Merkle proof"
+        },
+        {
+            "code": 6005,
+            "name": "ExceededMaxClaim",
+            "msg": "Exceeded maximum claim amount"
+        },
+        {
+            "code": 6006,
+            "name": "MaxNodesExceeded",
+            "msg": "Exceeded maximum node count"
+        },
+        {
+            "code": 6007,
+            "name": "Unauthorized",
+            "msg": "Account is not authorized to execute this instruction"
+        },
+        {
+            "code": 6008,
+            "name": "ClawbackBeforeStart",
+            "msg": "Attempted clawback before start"
+        },
+        {
+            "code": 6009,
+            "name": "ClawbackAlreadyClaimed",
+            "msg": "Clawback already claimed"
+        },
+        {
+            "code": 6010,
+            "name": "InsufficientClawbackDelay",
+            "msg": "Clawback start must be at least one day after vesting end"
+        },
+        {
+            "code": 6011,
+            "name": "SameClawbackReceiver",
+            "msg": "New and old Clawback receivers are identical"
+        },
+        {
+            "code": 6012,
+            "name": "SameAdmin",
+            "msg": "New and old admin are identical"
+        },
+        {
+            "code": 6013,
+            "name": "ClaimExpired",
+            "msg": "Claim window expired"
+        },
+        {
+            "code": 6014,
+            "name": "ClaimingIsNotStarted",
+            "msg": "Claiming is not started"
+        },
+        {
+            "code": 6015,
+            "name": "CannotCloseDistributor",
+            "msg": "Cannot close distributor"
+        },
+        {
+            "code": 6016,
+            "name": "CannotCloseClaimStatus",
+            "msg": "Cannot close claim status"
+        },
+        {
+            "code": 6017,
+            "name": "InvalidActivationType",
+            "msg": "Invalid activation type"
+        },
+        {
+            "code": 6018,
+            "name": "InvalidActivationPoint",
+            "msg": "Invalid activation point"
+        }
+    ],
+    "types": [
+        {
+            "name": "BaseFeeStruct",
+            "serialization": "bytemuck",
+            "repr": {
+                "kind": "c"
+            },
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "cliff_fee_numerator",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "fee_scheduler_mode",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "padding_0",
+                        "type": {
+                            "array": [
+                                "u8",
+                                5
+                            ]
+                        }
+                    },
+                    {
+                        "name": "number_of_period",
+                        "type": "u16"
+                    },
+                    {
+                        "name": "period_frequency",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "reduction_factor",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "padding_1",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ClaimStatus",
+            "docs": [
+                "Holds whether or not a claimant has claimed tokens."
+            ],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "claimant",
+                        "docs": [
+                            "Authority that claimed the tokens."
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "amount",
+                        "docs": [
+                            "amount"
+                        ],
+                        "type": "u64"
+                    },
+                    {
+                        "name": "closable",
+                        "docs": [
+                            "indicate that whether admin can close this account, for testing purpose"
+                        ],
+                        "type": "bool"
+                    },
+                    {
+                        "name": "admin",
+                        "docs": [
+                            "admin of merkle tree, store for for testing purpose"
+                        ],
+                        "type": "pubkey"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ClaimedEvent",
+            "docs": [
+                "Emitted when tokens are claimed."
+            ],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "claimant",
+                        "docs": [
+                            "User that claimed."
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "amount",
+                        "docs": [
+                            "Amount of tokens to distribute."
+                        ],
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "DynamicFeeStruct",
+            "serialization": "bytemuck",
+            "repr": {
+                "kind": "c"
+            },
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "initialized",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "padding",
+                        "type": {
+                            "array": [
+                                "u8",
+                                7
+                            ]
+                        }
+                    },
+                    {
+                        "name": "max_volatility_accumulator",
+                        "type": "u32"
+                    },
+                    {
+                        "name": "variable_fee_control",
+                        "type": "u32"
+                    },
+                    {
+                        "name": "bin_step",
+                        "type": "u16"
+                    },
+                    {
+                        "name": "filter_period",
+                        "type": "u16"
+                    },
+                    {
+                        "name": "decay_period",
+                        "type": "u16"
+                    },
+                    {
+                        "name": "reduction_factor",
+                        "type": "u16"
+                    },
+                    {
+                        "name": "last_update_timestamp",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "bin_step_u128",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "sqrt_price_reference",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "volatility_accumulator",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "volatility_reference",
+                        "type": "u128"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "MerkleDistributor",
+            "docs": [
+                "State for the account which distributes tokens."
+            ],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "bump",
+                        "docs": [
+                            "Bump seed."
+                        ],
+                        "type": "u8"
+                    },
+                    {
+                        "name": "version",
+                        "docs": [
+                            "Version of the airdrop"
+                        ],
+                        "type": "u64"
+                    },
+                    {
+                        "name": "root",
+                        "docs": [
+                            "The 256-bit merkle root."
+                        ],
+                        "type": {
+                            "array": [
+                                "u8",
+                                32
+                            ]
+                        }
+                    },
+                    {
+                        "name": "base",
+                        "docs": [
+                            "base key of distributor."
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "pool",
+                        "docs": [
+                            "Damm v2 pool"
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "position",
+                        "docs": [
+                            "Damm v2 position"
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "position_nft_account",
+                        "docs": [
+                            "Damm v2 position_nft_account"
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "unlocked_liquidity",
+                        "docs": [
+                            "position unlocked liquidity"
+                        ],
+                        "type": "u128"
+                    },
+                    {
+                        "name": "max_total_claim",
+                        "docs": [
+                            "Maximum number of tokens that can ever be claimed from this [MerkleDistributor]."
+                        ],
+                        "type": "u64"
+                    },
+                    {
+                        "name": "max_num_nodes",
+                        "docs": [
+                            "Maximum number of nodes in [MerkleDistributor]."
+                        ],
+                        "type": "u64"
+                    },
+                    {
+                        "name": "total_amount_claimed",
+                        "docs": [
+                            "Total amount of tokens that have been claimed."
+                        ],
+                        "type": "u64"
+                    },
+                    {
+                        "name": "num_nodes_claimed",
+                        "docs": [
+                            "Number of nodes that have been claimed."
+                        ],
+                        "type": "u64"
+                    },
+                    {
+                        "name": "clawback_start_ts",
+                        "docs": [
+                            "Clawback start (Unix Timestamp)"
+                        ],
+                        "type": "i64"
+                    },
+                    {
+                        "name": "clawback_receiver",
+                        "docs": [
+                            "Clawback receiver"
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "admin",
+                        "docs": [
+                            "Admin wallet"
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "clawed_back",
+                        "docs": [
+                            "Whether or not the distributor has been clawed back"
+                        ],
+                        "type": "bool"
+                    },
+                    {
+                        "name": "activation_point",
+                        "docs": [
+                            "this merkle tree is activated from this slot or timestamp"
+                        ],
+                        "type": "u64"
+                    },
+                    {
+                        "name": "closable",
+                        "docs": [
+                            "indicate that whether admin can close this pool, for testing purpose"
+                        ],
+                        "type": "bool"
+                    },
+                    {
+                        "name": "activation_type",
+                        "docs": [
+                            "activation type, 0 means slot, 1 means timestamp"
+                        ],
+                        "type": "u8"
+                    },
+                    {
+                        "name": "buffer",
+                        "docs": [
+                            "Buffer 0"
+                        ],
+                        "type": {
+                            "array": [
+                                "u8",
+                                32
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "NewClaimEvent",
+            "docs": [
+                "Emitted when a new claim is created."
+            ],
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "claimant",
+                        "docs": [
+                            "User that claimed."
+                        ],
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "timestamp",
+                        "docs": [
+                            "Timestamp."
+                        ],
+                        "type": "i64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Pool",
+            "serialization": "bytemuck",
+            "repr": {
+                "kind": "c"
+            },
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "pool_fees",
+                        "type": {
+                            "defined": {
+                                "name": "PoolFeesStruct"
+                            }
+                        }
+                    },
+                    {
+                        "name": "token_a_mint",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "token_b_mint",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "token_a_vault",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "token_b_vault",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "whitelisted_vault",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "partner",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "liquidity",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "_padding",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "protocol_a_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "protocol_b_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "partner_a_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "partner_b_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "sqrt_min_price",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "sqrt_max_price",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "sqrt_price",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "activation_point",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "activation_type",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "pool_status",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "token_a_flag",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "token_b_flag",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "collect_fee_mode",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "pool_type",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "_padding_0",
+                        "type": {
+                            "array": [
+                                "u8",
+                                2
+                            ]
+                        }
+                    },
+                    {
+                        "name": "fee_a_per_liquidity",
+                        "type": {
+                            "array": [
+                                "u8",
+                                32
+                            ]
+                        }
+                    },
+                    {
+                        "name": "fee_b_per_liquidity",
+                        "type": {
+                            "array": [
+                                "u8",
+                                32
+                            ]
+                        }
+                    },
+                    {
+                        "name": "permanent_lock_liquidity",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "metrics",
+                        "type": {
+                            "defined": {
+                                "name": "PoolMetrics"
+                            }
+                        }
+                    },
+                    {
+                        "name": "creator",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "_padding_1",
+                        "type": {
+                            "array": [
+                                "u64",
+                                6
+                            ]
+                        }
+                    },
+                    {
+                        "name": "reward_infos",
+                        "type": {
+                            "array": [
+                                {
+                                    "defined": {
+                                        "name": "RewardInfo"
+                                    }
+                                },
+                                2
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "PoolFeesStruct",
+            "docs": [
+                "Information regarding fee charges",
+                "trading_fee = amount * trade_fee_numerator / denominator",
+                "protocol_fee = trading_fee * protocol_fee_percentage / 100",
+                "referral_fee = protocol_fee * referral_percentage / 100",
+                "partner_fee = (protocol_fee - referral_fee) * partner_fee_percentage / denominator"
+            ],
+            "serialization": "bytemuck",
+            "repr": {
+                "kind": "c"
+            },
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "base_fee",
+                        "type": {
+                            "defined": {
+                                "name": "BaseFeeStruct"
+                            }
+                        }
+                    },
+                    {
+                        "name": "protocol_fee_percent",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "partner_fee_percent",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "referral_fee_percent",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "padding_0",
+                        "type": {
+                            "array": [
+                                "u8",
+                                5
+                            ]
+                        }
+                    },
+                    {
+                        "name": "dynamic_fee",
+                        "type": {
+                            "defined": {
+                                "name": "DynamicFeeStruct"
+                            }
+                        }
+                    },
+                    {
+                        "name": "padding_1",
+                        "type": {
+                            "array": [
+                                "u64",
+                                2
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "PoolMetrics",
+            "serialization": "bytemuck",
+            "repr": {
+                "kind": "c"
+            },
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "total_lp_a_fee",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "total_lp_b_fee",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "total_protocol_a_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "total_protocol_b_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "total_partner_a_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "total_partner_b_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "total_position",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "padding",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Position",
+            "serialization": "bytemuck",
+            "repr": {
+                "kind": "c"
+            },
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "pool",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "nft_mint",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "fee_a_per_token_checkpoint",
+                        "type": {
+                            "array": [
+                                "u8",
+                                32
+                            ]
+                        }
+                    },
+                    {
+                        "name": "fee_b_per_token_checkpoint",
+                        "type": {
+                            "array": [
+                                "u8",
+                                32
+                            ]
+                        }
+                    },
+                    {
+                        "name": "fee_a_pending",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "fee_b_pending",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "unlocked_liquidity",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "vested_liquidity",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "permanent_locked_liquidity",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "metrics",
+                        "type": {
+                            "defined": {
+                                "name": "PositionMetrics"
+                            }
+                        }
+                    },
+                    {
+                        "name": "reward_infos",
+                        "type": {
+                            "array": [
+                                {
+                                    "defined": {
+                                        "name": "UserRewardInfo"
+                                    }
+                                },
+                                2
+                            ]
+                        }
+                    },
+                    {
+                        "name": "padding",
+                        "type": {
+                            "array": [
+                                "u128",
+                                6
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "PositionMetrics",
+            "serialization": "bytemuck",
+            "repr": {
+                "kind": "c"
+            },
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "total_claimed_a_fee",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "total_claimed_b_fee",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "RewardInfo",
+            "docs": [
+                "Stores the state relevant for tracking liquidity mining rewards"
+            ],
+            "serialization": "bytemuck",
+            "repr": {
+                "kind": "c"
+            },
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "initialized",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "reward_token_flag",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "_padding_0",
+                        "type": {
+                            "array": [
+                                "u8",
+                                6
+                            ]
+                        }
+                    },
+                    {
+                        "name": "_padding_1",
+                        "type": {
+                            "array": [
+                                "u8",
+                                8
+                            ]
+                        }
+                    },
+                    {
+                        "name": "mint",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "vault",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "funder",
+                        "type": "pubkey"
+                    },
+                    {
+                        "name": "reward_duration",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "reward_duration_end",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "reward_rate",
+                        "type": "u128"
+                    },
+                    {
+                        "name": "reward_per_token_stored",
+                        "type": {
+                            "array": [
+                                "u8",
+                                32
+                            ]
+                        }
+                    },
+                    {
+                        "name": "last_update_time",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "cumulative_seconds_with_empty_liquidity_reward",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "UserRewardInfo",
+            "serialization": "bytemuck",
+            "repr": {
+                "kind": "c"
+            },
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "reward_per_token_checkpoint",
+                        "type": {
+                            "array": [
+                                "u8",
+                                32
+                            ]
+                        }
+                    },
+                    {
+                        "name": "reward_pendings",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "total_claimed_rewards",
+                        "type": "u64"
+                    }
+                ]
+            }
+        }
+    ]
+}
