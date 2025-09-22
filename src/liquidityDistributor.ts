@@ -158,12 +158,11 @@ export class LiquidityDistributorClient {
     const { proof, merkle_tree } = user;
     const distributorAddress = new PublicKey(merkle_tree);
 
-    let { distributorAccountData } = params;
+    let distributorAccountData =
+      params.distributorAccountData ??
+      (await this.getDistributor(distributorAddress));
     if (!distributorAccountData) {
-      distributorAccountData = await this.getDistributor(distributorAddress);
-      if (!distributorAccountData) {
-        throw new Error("Distributor not found");
-      }
+      throw new Error("Distributor not found");
     }
 
     const claimStatusAddress = deriveClaimStatusAddress(
