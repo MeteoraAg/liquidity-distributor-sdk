@@ -60,7 +60,8 @@ const signature = await sendAndConfirmTransaction(connection, newClaimTx, [
 
 **Notes**
 
-When signing the transaction, the secondPositionNftMintKeypair must sign the transaction.
+- When signing the transaction, the secondPositionNftMintKeypair must sign the transaction.
+- If the `distributorAccountData` is not provided, it will be fetched within the `claimPositionNft` function.
 
 ---
 
