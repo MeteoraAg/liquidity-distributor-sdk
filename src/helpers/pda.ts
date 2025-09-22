@@ -9,7 +9,7 @@ export function deriveClaimStatusAddress(
   merkleTree: PublicKey
 ) {
   return PublicKey.findProgramAddressSync(
-    [Buffer.from("claim_status"), claimant.toBuffer(), merkleTree.toBuffer()],
+    [Buffer.from("ClaimStatus"), claimant.toBuffer(), merkleTree.toBuffer()],
     LIQUIDITY_DISTRIBUTOR_PROGRAM_ID
   )[0];
 }
