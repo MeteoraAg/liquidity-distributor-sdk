@@ -35,6 +35,7 @@ async claimPositionNft(claimant: PublicKey, payer: PublicKey): Promise<{
 {
   claimant: PublicKey; // The claimant's public key
   payer: PublicKey; // The payer's public key
+  distributorAccountData?: Distributor; // The distributor account data (optional)
 }
 ```
 
