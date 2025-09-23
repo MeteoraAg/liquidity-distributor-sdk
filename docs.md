@@ -93,8 +93,13 @@ async getDistributor(merkleTree: PublicKey): Promise<Distributor>
 **Example**
 
 ```typescript
-const distributor = await client.getDistributor(
-  new PublicKey("boss1234567890abcdefghijklmnopqrstuvwxyz")
+const user = await ldClient.getUser(userAddress);
+if (!user) {
+  throw new Error("User not found");
+}
+
+const distributor = await ldClient.getDistributor(
+  new PublicKey(user.merkle_tree)
 );
 ```
 
