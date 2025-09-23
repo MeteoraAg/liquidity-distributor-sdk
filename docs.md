@@ -125,13 +125,8 @@ async getClaimStatus(claimant: PublicKey): Promise<ClaimStatus>
 **Example**
 
 ```typescript
-const claimStatusAddress = deriveClaimStatusAddress(
-  new PublicKey("claimant"),
-  new PublicKey("merkleTree")
-);
-
 const claimStatus = await client.getClaimStatus(
-  new PublicKey("claimStatusAddress")
+  new PublicKey("boss1234567890abcdefghijklmnopqrstuvwxyz")
 );
 ```
 
