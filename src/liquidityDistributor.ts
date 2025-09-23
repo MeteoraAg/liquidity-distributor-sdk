@@ -89,7 +89,12 @@ export class LiquidityDistributorClient {
         return null;
       }
 
-      const user = await res.json();
+      const user: UserResponse = await res.json();
+
+      if (user.amount === 0) {
+        return null;
+      }
+
       return user;
     } catch (error) {
       throw error;
@@ -104,7 +109,7 @@ export class LiquidityDistributorClient {
   async getClaimStatus(claimant: PublicKey): Promise<ClaimStatus | null> {
     const user = await this.getUser(claimant);
     if (!user) {
-      throw new Error("User not found");
+      return null;
     }
 
     const claimStatusAddress = deriveClaimStatusAddress(
