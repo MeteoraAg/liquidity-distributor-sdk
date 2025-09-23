@@ -23,7 +23,14 @@ import { Connection } from "@solana/web3.js";
 import { LiquidityDistributorClient } from "@meteora-ag/liquidity-distributor-sdk";
 
 const connection = new Connection("https://api.mainnet-beta.solana.com");
-const client = new LiquidityDistributorClient(connection, "confirmed");
+const tokenMint = new PublicKey("YOUR_TOKEN_MINT");
+const claimProofEndpoint = "YOUR_CLAIM_PROOF_ENDPOINT";
+const client = new LiquidityDistributorClient(
+  tokenMint,
+  claimProofEndpoint,
+  connection,
+  "confirmed"
+);
 ```
 
 ## Usage
